@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.leo.plottheroute.ui.RouteMapsActivity"/>
+
+
+    <LinearLayout
+        android:id="@+id/linearStart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/linearEnd"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/startPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:focusedByDefault="true"
+            android:text="Tap the Map"/>
+        <Button
+            android:id="@+id/btnPointsListOne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address List"
+            android:layout_alignParentRight="true"
+        />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearEnd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnPlotRoute"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/endPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="Tap the Map"/>
+
+        <Button
+            android:id="@+id/btnPointsListTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address List"
+            android:layout_alignParentRight="true"
+        />
+
+    </LinearLayout>
+
+
+
+    <Button android:id="@+id/btnPlotRoute"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="Create Route"/>
+
+    <Button android:id="@+id/btnCenterRoute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="50dp"
+            android:text="Route"/>
+</RelativeLayout>
