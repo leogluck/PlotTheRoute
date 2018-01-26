@@ -10,13 +10,17 @@ import java.util.List;
  */
 
 public class LruCache {
-    private List<LatLng> mList;
+    private static final LruCache lruCache = new LruCache();
+    private List<LatLng> mList = new LinkedList<>();
 
-    public LruCache() {
-        mList = new LinkedList<>();
+    private LruCache() {
     }
 
-    public LruCache(List<LatLng> pointsList) {
+    public static LruCache getInstance() {
+        return lruCache;
+    }
+
+    public void setLruCashe(List<LatLng> pointsList) {
         mList = pointsList;
     }
 
@@ -25,10 +29,6 @@ public class LruCache {
             mList.remove(9);
         }
         mList.add(latLng);
-    }
-
-    public LatLng getPoint(int index) {
-        return mList.get(index);
     }
 
     public List<LatLng> getAllPoints() {

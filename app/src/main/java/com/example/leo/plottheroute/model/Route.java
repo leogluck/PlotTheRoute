@@ -3,6 +3,7 @@ package com.example.leo.plottheroute.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,12 +12,6 @@ public class Route {
     @SerializedName("bounds")
     @Expose
     private Bounds bounds;
-    @SerializedName("copyrights")
-    @Expose
-    private String copyrights;
-    @SerializedName("legs")
-    @Expose
-    private List<Leg> legs = new ArrayList<Leg>();
     @SerializedName("overview_polyline")
     @Expose
     private OverviewPolyline overviewPolyline;
@@ -26,9 +21,6 @@ public class Route {
     @SerializedName("warnings")
     @Expose
     private List<Object> warnings = new ArrayList<Object>();
-    @SerializedName("waypoint_order")
-    @Expose
-    private List<Object> waypointOrder = new ArrayList<Object>();
 
     public Bounds getBounds() {
         return bounds;
@@ -38,22 +30,6 @@ public class Route {
         this.bounds = bounds;
     }
 
-    public String getCopyrights() {
-        return copyrights;
-    }
-
-    public void setCopyrights(String copyrights) {
-        this.copyrights = copyrights;
-    }
-
-    public List<Leg> getLegs() {
-        return legs;
-    }
-
-    public void setLegs(List<Leg> legs) {
-        this.legs = legs;
-    }
-
     public OverviewPolyline getOverviewPolyline() {
         return overviewPolyline;
     }
@@ -61,29 +37,4 @@ public class Route {
     public void setOverviewPolyline(OverviewPolyline overviewPolyline) {
         this.overviewPolyline = overviewPolyline;
     }
-
-    public String getSummary() {
-        return summary;
-    }
-
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
-
-    public List<Object> getWarnings() {
-        return warnings;
-    }
-
-    public void setWarnings(List<Object> warnings) {
-        this.warnings = warnings;
-    }
-
-    public List<Object> getWaypointOrder() {
-        return waypointOrder;
-    }
-
-    public void setWaypointOrder(List<Object> waypointOrder) {
-        this.waypointOrder = waypointOrder;
-    }
-
 }

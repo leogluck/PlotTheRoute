@@ -7,5 +7,10 @@
     tools:context="com.example.leo.plottheroute.ui.PointsListActivity">
 
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/pointsList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>
 
 </android.support.constraint.ConstraintLayout>

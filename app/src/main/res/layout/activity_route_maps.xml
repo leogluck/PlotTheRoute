@@ -19,20 +19,25 @@
         android:layout_above="@id/linearEnd"
         android:orientation="horizontal">
 
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
         <EditText
             android:id="@+id/startPoint"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:focusedByDefault="true"
-            android:text="Tap the Map"/>
+            android:text="TAP THE MAP"/>
         <Button
             android:id="@+id/btnPointsListOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address List"
             android:layout_alignParentRight="true"
+            android:text="Address List"
         />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -43,23 +48,28 @@
         android:layout_above="@id/btnPlotRoute"
         android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/endPoint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="Tap the Map"/>
+        <RelativeLayout android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btnPointsListTwo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Address List"
-            android:layout_alignParentRight="true"
-        />
+
+            <EditText
+                android:id="@+id/endPoint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="Tap the Map"/>
+
+            <Button
+                android:id="@+id/btnPointsListTwo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="Address List"
+            />
+        </RelativeLayout>
+
 
     </LinearLayout>
-
 
 
     <Button android:id="@+id/btnPlotRoute"

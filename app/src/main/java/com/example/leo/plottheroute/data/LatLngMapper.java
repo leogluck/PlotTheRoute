@@ -22,7 +22,6 @@ public class LatLngMapper {
                 sb.append(";");
             }
         }
-
         return sb.toString();
     }
 
@@ -36,7 +35,6 @@ public class LatLngMapper {
                     Double.valueOf(pointsLatLng[1].toString()));
             pointsList.add(latLng);
         }
-
         return pointsList;
     }
 }

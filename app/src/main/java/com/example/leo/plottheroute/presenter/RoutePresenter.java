@@ -1,9 +1,9 @@
 package com.example.leo.plottheroute.presenter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.leo.plottheroute.R;
 import com.example.leo.plottheroute.data.LatLngMapper;
@@ -15,7 +15,6 @@ import com.example.leo.plottheroute.model.RouteDetails;
 import com.example.leo.plottheroute.model.Southwest;
 import com.example.leo.plottheroute.network.RouteAPI;
 import com.example.leo.plottheroute.network.RouteService;
-import com.example.leo.plottheroute.ui.PointsListActivity;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -37,8 +36,8 @@ public class RoutePresenter {
     private RouteView mRouteView;
     private Context mContext;
     private List<Route> mRoutes;
-    private LruCache mLruCache;
     private LatLngMapper mLatLngMapper;
+
 
     public RoutePresenter(Context context, RouteView routeView) {
         this.mContext = context;
@@ -47,7 +46,6 @@ public class RoutePresenter {
     }
 
     public void centerRoute() {
-
         LatLngBounds bounds = getLatLngBounds(mRoutes);
         int padding = 100;
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
@@ -58,61 +56,54 @@ public class RoutePresenter {
     public void requestRoute(LatLng startPoint, LatLng endPoint) {
         RouteService routeService = RouteAPI.getClient().create(RouteService.class);
 
-        Call<RouteDetails> call = routeService.getDirection(latLngConverter(startPoint),
-                latLngConverter(endPoint),
+        Call<RouteDetails> call = routeService.getDirection(latLngConverting(startPoint),
+                latLngConverting(endPoint),
                 mContext.getString(R.string.google_maps_key));
 
         call.enqueue(new Callback<RouteDetails>() {
             @Override
             public void onResponse(Call<RouteDetails> call,
                     Response<RouteDetails> response) {
-
                 mRoutes = response.body().getRoutes();
 
                 if (!mRoutes.isEmpty()) {
                     List<LatLng> decodedPath = getDecodedPath(mRoutes);
-
                     LatLngBounds bounds = getLatLngBounds(mRoutes);
                     int padding = 100;
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-
                     mRouteView.showRoute(decodedPath, cu);
                 }
             }
 
             @Override
             public void onFailure(Call<RouteDetails> call, Throwable t) {
-                String s = "s";
+                Log.d("DEBUG", t.getMessage());
             }
         });
-
     }
 
-    public void readSharedPrefs() {
+    public void getPrevPositions() {
         String points = SharedPrefsManager.getInstance().getPrefs(mContext);
-        if (TextUtils.isEmpty(points)) {
-            mLruCache = new LruCache();
-        } else {
+        if (!TextUtils.isEmpty(points)) {
             List<LatLng> latLngList = mLatLngMapper.mapString(points);
-            mLruCache = new LruCache(latLngList);
+            LruCache.getInstance().setLruCashe(latLngList);
         }
     }
 
-    public void addLruCache(LatLng latLng) {
-        mLruCache.add(latLng);
+    public void addPositionToCache(LatLng latLng) {
+        LruCache.getInstance().add(latLng);
     }
 
-    public void saveSharedPrefs() {
-        String points = mLatLngMapper.mapLatLng(mLruCache.getAllPoints());
+    public void savePositions() {
+        String points = mLatLngMapper.mapLatLng(LruCache.getInstance().getAllPoints());
         SharedPrefsManager.getInstance().savePrefs(mContext, points);
     }
 
-    public void showAddressListActivity() {
-        Intent intent = new Intent(mContext, PointsListActivity.class);
-        mContext.startActivity(intent);
+    public void showAddressListActivity(int id) {
+        mRouteView.startPointListActivity(id);
     }
 
-    private String latLngConverter(LatLng latLng) {
+    private String latLngConverting(LatLng latLng) {
         String mapPoint = Double.toString(latLng.latitude) + "," + Double.toString(
                 latLng.longitude);
         return mapPoint;
@@ -137,6 +128,8 @@ public class RoutePresenter {
         void showRoute(List<LatLng> decodedPath, CameraUpdate cu);
 
         void centerRoute(CameraUpdate cu);
+
+        void startPointListActivity(int id);
     }
 }
 
