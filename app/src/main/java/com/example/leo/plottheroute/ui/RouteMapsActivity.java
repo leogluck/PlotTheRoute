@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -35,7 +34,6 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
         RoutePresenter.RouteView, View.OnClickListener {
 
     private GoogleMap mMap;
-    private LatLng mLocation;
 
     public final static String POSITION = "POSITION";
 
@@ -62,8 +60,6 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     private void init() {
-
-        mLocation = new LatLng(50.431782, 30.516382);
         mRoutePresenter = new RoutePresenter(this, this);
 
         startPoint = findViewById(R.id.startPoint);
@@ -109,7 +105,6 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
-                    initMap();
                 }
             }
         }
@@ -119,6 +114,7 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        initMap();
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
@@ -141,7 +137,6 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
                 }
             }
         });
-        initMap();
     }
 
     @SuppressLint("MissingPermission")
@@ -151,12 +146,10 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
             LocationManager locationManager = (LocationManager) getSystemService(
                     Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
-            Location location = locationManager.getLastKnownLocation(
-                    locationManager.getBestProvider(criteria, false));
-            mLocation = new LatLng(location.getLatitude(), location.getLongitude());
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mLocation, 11));
     }
 
     private void getLocationPermission() {

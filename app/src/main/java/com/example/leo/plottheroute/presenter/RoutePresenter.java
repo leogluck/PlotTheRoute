@@ -46,11 +46,13 @@ public class RoutePresenter {
     }
 
     public void centerRoute() {
-        LatLngBounds bounds = getLatLngBounds(mRoutes);
-        int padding = 100;
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+        if (mRoutes != null) {
+            LatLngBounds bounds = getLatLngBounds(mRoutes);
+            int padding = 100;
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
 
-        mRouteView.centerRoute(cu);
+            mRouteView.centerRoute(cu);
+        }
     }
 
     public void requestRoute(LatLng startPoint, LatLng endPoint) {
@@ -111,11 +113,11 @@ public class RoutePresenter {
 
     @NonNull
     private LatLngBounds getLatLngBounds(List<Route> routes) {
-        Northeast ne = routes.get(0).getBounds().getNortheast();
-        Southwest sw = routes.get(0).getBounds().getSouthwest();
-        LatLng neLatLng = new LatLng(ne.getLat(), ne.getLng());
-        LatLng swLatLng = new LatLng(sw.getLat(), sw.getLng());
-        return new LatLngBounds(swLatLng, neLatLng);
+            Northeast ne = routes.get(0).getBounds().getNortheast();
+            Southwest sw = routes.get(0).getBounds().getSouthwest();
+            LatLng neLatLng = new LatLng(ne.getLat(), ne.getLng());
+            LatLng swLatLng = new LatLng(sw.getLat(), sw.getLng());
+            return new LatLngBounds(swLatLng, neLatLng);
     }
 
     private List<LatLng> getDecodedPath(List<Route> routes) {
