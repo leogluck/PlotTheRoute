@@ -26,7 +26,7 @@ public class LruCache {
 
     public void add(LatLng latLng) {
         if (mList.size() == 10) {
-            mList.remove(9);
+            mList.remove(0);
         }
         mList.add(latLng);
     }
