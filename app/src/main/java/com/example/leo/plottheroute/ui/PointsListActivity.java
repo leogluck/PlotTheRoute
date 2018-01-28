@@ -3,6 +3,8 @@ package com.example.leo.plottheroute.ui;
 import static com.example.leo.plottheroute.ui.RouteMapsActivity.POSITION;
 
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +18,15 @@ import com.example.leo.plottheroute.R;
 import com.example.leo.plottheroute.data.LruCache;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class PointsListActivity extends AppCompatActivity {
 
     private RecyclerView mPointsListView;
+    private Geocoder mGeocoder;
+    private List<Address> mAddressList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,8 @@ public class PointsListActivity extends AppCompatActivity {
         mPointsListView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mPointsListView.setLayoutManager(layoutManager);
+        mGeocoder = new Geocoder(this, Locale.getDefault());
+
         showPoints(LruCache.getInstance().getAllPoints());
     }
 
@@ -39,17 +47,37 @@ public class PointsListActivity extends AppCompatActivity {
         mPointsListView.setAdapter(adapter);
     }
 
+    private String getAddress(LatLng latLng) {
+        String address;
+
+        try {
+            mAddressList = mGeocoder.getFromLocation(
+                    latLng.latitude,
+                    latLng.longitude,
+                    1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (mAddressList != null && mAddressList.size() != 0) {
+            address = mAddressList.get(0).getAddressLine(0);
+        } else {
+            address = "Error: No Address Found";
+        }
+        return address;
+    }
+
     class PointsListAdapter extends RecyclerView.Adapter<PointsListAdapter.ViewHolder> {
         private List<LatLng> mPoints;
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mLat;
-            TextView mLng;
+            TextView mItemKey;
+            TextView mAddress;
 
             ViewHolder(View view) {
                 super(view);
-                mLat = view.findViewById(R.id.latitude);
-                mLng = view.findViewById(R.id.longitude);
+                mItemKey = view.findViewById(R.id.item_key);
+                mAddress = view.findViewById(R.id.address);
 
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -62,6 +90,11 @@ public class PointsListActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+
+        private String getItemKey(int position) {
+            int addressNumber = ++position;
+            return "Address " + addressNumber + ":";
         }
 
         PointsListAdapter(List<LatLng> points) {
@@ -78,8 +111,8 @@ public class PointsListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.mLat.setText(Double.toString(mPoints.get(position).latitude));
-            holder.mLng.setText(Double.toString(mPoints.get(position).longitude));
+            holder.mItemKey.setText(getItemKey(position));
+            holder.mAddress.setText(getAddress(mPoints.get(position)));
         }
 
         @Override

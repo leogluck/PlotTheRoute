@@ -4,16 +4,16 @@
                 android:orientation="vertical">
 
     <TextView
-        android:id="@+id/latitude"
+        android:id="@+id/item_key"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="LAN"
+        android:text="Item Key"
     />
     <TextView
-        android:id="@+id/longitude"
+        android:id="@+id/address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/latitude"
-        android:text="LNG"/>
+        android:layout_below="@id/item_key"
+        android:text="Address"/>
 
 </RelativeLayout>

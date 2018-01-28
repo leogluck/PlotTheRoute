@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.support.annotation.NonNull;
@@ -28,12 +30,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCallback,
         RoutePresenter.RouteView, View.OnClickListener {
 
     private GoogleMap mMap;
+    private Geocoder mGeocoder;
+    List<Address> mAddressList;
 
     public final static String POSITION = "POSITION";
 
@@ -61,6 +67,7 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
 
     private void init() {
         mRoutePresenter = new RoutePresenter(this, this);
+        mGeocoder = new Geocoder(this, Locale.getDefault());
 
         startPoint = findViewById(R.id.startPoint);
         endPoint = findViewById(R.id.endPoint);
@@ -126,14 +133,14 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
                         startMarker.remove();
                     }
                     startMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                    startPoint.setText(latLng.toString());
+                    startPoint.setText(getAddress(latLng));
                 }
                 if (endPoint.isFocused()) {
                     if (endMarker != null) {
                         endMarker.remove();
                     }
                     endMarker = mMap.addMarker(new MarkerOptions().position(latLng));
-                    endPoint.setText(latLng.toString());
+                    endPoint.setText(getAddress(latLng));
                 }
             }
         });
@@ -150,6 +157,26 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 11));
         }
+    }
+
+    private String getAddress(LatLng latLng) {
+        String address;
+
+        try {
+            mAddressList = mGeocoder.getFromLocation(
+                    latLng.latitude,
+                    latLng.longitude,
+                    1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (mAddressList != null && mAddressList.size() != 0) {
+            address = mAddressList.get(0).getAddressLine(0);
+        } else {
+            address = "Error: No Address Found";
+        }
+        return address;
     }
 
     private void getLocationPermission() {
@@ -200,7 +227,7 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
                         startMarker = mMap.addMarker(
                                 new MarkerOptions().position(LruCache.getInstance()
                                         .getAllPoints().get(position)));
-                        startPoint.setText(startMarker.getPosition().toString());
+                        startPoint.setText(getAddress(startMarker.getPosition()));
                     }
                     break;
 
@@ -213,7 +240,7 @@ public class RouteMapsActivity extends FragmentActivity implements OnMapReadyCal
                         endMarker = mMap.addMarker(
                                 new MarkerOptions().position(LruCache.getInstance()
                                         .getAllPoints().get(position)));
-                        endPoint.setText(endMarker.getPosition().toString());
+                        endPoint.setText(getAddress(endMarker.getPosition()));
                     }
                     break;
             }
